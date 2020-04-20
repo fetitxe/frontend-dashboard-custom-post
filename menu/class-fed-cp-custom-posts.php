@@ -19,10 +19,7 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
             add_action('init', array($this, 'fed_cp_register_custom_post'));
             add_filter('fed_add_main_sub_menu', array($this, 'fed_cp_add_main_sub_menu'));
             add_action('wp_ajax_fed_cp_add_custom_post_type', array($this, 'fed_cp_add_custom_post_type_store'));
-            add_action('wp_ajax_fed_cp_delete_custom_post_type', array(
-                $this,
-                'fed_cp_delete_custom_post_type_delete',
-            ));
+            add_action('wp_ajax_fed_cp_delete_custom_post_type', array($this, 'fed_cp_delete_custom_post_type_delete'));
         }
 
         /**
@@ -62,7 +59,6 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
                      * List Custom Post Type
                      */
                     $this->fed_cp_add_custom_post_type();
-
                     fed_cp_custom_menu_icons_popup();
                 }
             }
@@ -246,10 +242,8 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
                     }
 
                     $labels = array(
-                        'name'                  => _x($name, 'post type General Name',
-                            'frontend-dashboard-custom-post'),
-                        'singular_name'         => _x($menu['singular_name'], 'post type singular name',
-                            'frontend-dashboard-custom-post'),
+                        'name'                  => _x($name, 'post type General Name', 'frontend-dashboard-custom-post'),
+                        'singular_name'         => _x($menu['singular_name'], 'post type singular name', 'frontend-dashboard-custom-post'),
                         /* translators: 1: menu name */
                         'menu_name'             => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $menu_name),
                         /* translators: 1:  name admin bar */
@@ -259,8 +253,7 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
                         /* translators: 1:  attributes */
                         'attributes'            => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $attributes),
                         /* translators: 1:  parent_item_colon */
-                        'parent_item_colon'     => sprintf(__('%1$s', 'frontend-dashboard-custom-post'),
-                            $parent_item_colon),
+                        'parent_item_colon'     => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $parent_item_colon),
                         /* translators: 1:  all_items */
                         'all_items'             => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $all_items),
                         /* translators: 1:  add_new_item */
@@ -280,40 +273,31 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
                         /* translators: 1:  not_found */
                         'not_found'             => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $not_found),
                         /* translators: 1:  not_found_in_trash */
-                        'not_found_in_trash'    => sprintf(__('%1$s', 'frontend-dashboard-custom-post'),
-                            $not_found_in_trash),
+                        'not_found_in_trash'    => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $not_found_in_trash),
                         /* translators: 1:  featured_image */
                         'featured_image'        => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $featured_image),
                         /* translators: 1:  set_featured_image */
-                        'set_featured_image'    => sprintf(__('%1$s', 'frontend-dashboard-custom-post'),
-                            $set_featured_image),
+                        'set_featured_image'    => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $set_featured_image),
                         /* translators: 1:  remove_featured_image */
-                        'remove_featured_image' => sprintf(__('%1$s', 'frontend-dashboard-custom-post'),
-                            $remove_featured_image),
+                        'remove_featured_image' => sprintf(__('%1$s', 'frontend-dashboard-custom-post'),  $remove_featured_image),
                         /* translators: 1:  use_featured_image */
-                        'use_featured_image'    => sprintf(__('%1$s', 'frontend-dashboard-custom-post'),
-                            $use_featured_image),
+                        'use_featured_image'    => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $use_featured_image),
                         /* translators: 1:  insert_into_item */
-                        'insert_into_item'      => sprintf(__('%1$s', 'frontend-dashboard-custom-post'),
-                            $insert_into_item),
+                        'insert_into_item'      => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $insert_into_item),
                         /* translators: 1:  uploaded_to_this_item */
-                        'uploaded_to_this_item' => sprintf(__('%1$s', 'frontend-dashboard-custom-post'),
-                            $uploaded_to_this_item),
+                        'uploaded_to_this_item' => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $uploaded_to_this_item),
                         /* translators: 1:  items_list */
                         'items_list'            => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $items_list),
                         /* translators: 1:  items_list_navigation */
-                        'items_list_navigation' => sprintf(__('%1$s', 'frontend-dashboard-custom-post'),
-                            $items_list_navigation),
+                        'items_list_navigation' => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $items_list_navigation),
                         /* translators: 1:  filter_items_list */
-                        'filter_items_list'     => sprintf(__('%1$s', 'frontend-dashboard-custom-post'),
-                            $filter_items_list),
+                        'filter_items_list'     => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $filter_items_list),
                     );
                     $args   = array(
                         /* translators: 1:  label */
-                        'label'               => sprintf(__('%1$s', 'frontend-dashboard-custom-post'),
-                            $menu['label']),
+                        'label'               => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $menu['label']),
                         /* translators: 1: description */
-                        'description'         => sprintf(__('%1$s', 'frontend-dashboard-custom-post'),$menu['description']),
+                        'description'         => sprintf(__('%1$s', 'frontend-dashboard-custom-post'), $menu['description']),
                         'labels'              => $labels,
                         'supports'            => $supports,
                         'hierarchical'        => fed_is_true_false($menu['hierarchical']),
@@ -446,28 +430,23 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
             if ('Edit' === $type) {
                 $cpt_name   = isset($cpt['Basic Settings']['label']['input']['user_value']) ? $cpt['Basic Settings']['label']['input']['user_value'] : '';
                 $cpt_index  = isset($cpt['Basic Settings']['slug']['input']['user_value']) ? $cpt['Basic Settings']['slug']['input']['user_value'] : '';
-                $delete_btn = '<div data-toggle="popover" data-url='.admin_url('admin-ajax.php?fed_nonce='.wp_create_nonce('fed_nonce').'&action=fed_cp_delete_custom_post_type').' data-id="'.$cpt_index.'" class="btn btn-danger fd_cp_custom_post_delete"> <i class="fa fa-trash fa-2x" aria-hidden="true"></i></div>';
+                $delete_btn = '<div data-toggle="popover" data-url='.admin_url('admin-ajax.php?fed_nonce='.wp_create_nonce('fed_nonce').'&action=fed_cp_delete_custom_post_type').' data-id="'.$cpt_index.'" class="btn btn-danger fd_cp_custom_post_delete"> <i class="fa fa-trash fa-2x" aria-hidden="true"></i> <span class="h4">'.__('Delete','frontend-dashboard-custom-post').'</span></div>';
             }
             ?>
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        <b><?php echo $type; ?><?php _e('Custom Post',
-                                'frontend-dashboard-custom-post'); ?><?php echo $cpt_name; ?></b>
+                        <b><?php echo $type; ?> <?php _e('Custom Post', 'frontend-dashboard-custom-post'); ?> <?php echo $cpt_name; ?></b>
                         <span class="pull-right m-t-5">
-											<a href="<?php echo menu_page_url('fed_custom_post',
-                                                false) ?>" class="fed_add_new_custom_post">
-												<i class="fa fa-plus"></i>
-												<?php _e('Add New Custom Post', 'frontend-dashboard-custom-post') ?>
-											</a>
-										</span>
+							<a href="<?php echo menu_page_url('fed_custom_post', false); ?>" class="fed_add_new_custom_post">
+								<i class="fa fa-plus"></i>
+								<?php _e('Add New Custom Post', 'frontend-dashboard-custom-post'); ?>
+							</a>
+						</span>
                     </h3>
                 </div>
                 <div class="panel-body">
                     <div class="text-right p-b-10">
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fa fa-save fa-2x" aria-hidden="true"></i>
-                        </button>
                         <?php echo $delete_btn; ?>
                     </div>
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -518,10 +497,9 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
                         ?>
                     </div>
                     <div class="text-right">
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fa fa-save fa-2x" aria-hidden="true"></i>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-save fa-2x" aria-hidden="true" style="vertical-align:bottom;"></i> <span class="h4"><?php _e('Save','frontend-dashboard-custom-post'); ?></h4>
                         </button>
-                        <?php echo $delete_btn; ?>
                     </div>
                 </div>
             </div>

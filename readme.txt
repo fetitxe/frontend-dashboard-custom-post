@@ -3,8 +3,8 @@ Contributors: vinoth06, buffercode
 Tags: dashboard, frontend dashboard pages, pages in dashboard, custom pages
 Donate link: https://www.paypal.com/paypalme2/buffercode
 Requires at least: 4.6
-Tested up to: 5.2.4
-Stable tag: 1.5.4
+Tested up to: 5.4
+Stable tag: 1.5.5
 License: GPL V3
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -45,7 +45,7 @@ Easy to add, edit and delete the taxonomies (category/tag)
 4. Do save.
 
 == Changelog ==
-= 1.5.4 [28-Oct-2019] =
+= 1.5.5 [19-Apr-2019] =
 
 * Bug fixes
 

@@ -43,7 +43,7 @@ jQuery(document).ready(function ($) {
                         swal({
                                 title: "Cancelled",
                                 type: "error",
-                                confirmButtonColor: '#0AAAAA'
+//                                confirmButtonColor: '#0AAAAA'
                             }
                         );
                     }

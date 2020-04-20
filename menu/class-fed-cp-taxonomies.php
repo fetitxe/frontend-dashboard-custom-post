@@ -88,22 +88,26 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
         /**
          * Add Custom Taxonomies
          */
-        public function fed_cp_add_custom_taxonomies()
-        {
-            $request      = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-            $redirect_url = admin_url().'admin.php?page=fed_taxonomies';
-            $status       = 'added';
-            /**
-             * Check for Nonce
-             */
-            fed_verify_nonce($request);
-            /**
-             * Check for mandatory fields
-             */
-            if ( ! is_array($request['object_type']) || ! isset($request['slug'], $request['label'], $request['singular_name'], $request['object_type']) || fed_request_empty($request['slug']) || fed_request_empty($request['label']) || fed_request_empty($request['singular_name'])) {
-                wp_send_json_error(array(
-                    'message' => __('Please fill mandatory fields', 'frontend-dashboard-custom-post'),
-                ));
+		public function fed_cp_add_custom_taxonomies(){
+			$request      = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			$redirect_url = admin_url().'admin.php?page=fed_taxonomies';
+			$status       = 'added';
+			/**
+			 * Check for Nonce
+			 */
+			fed_verify_nonce($request);
+			/**
+			 * Check for mandatory fields
+			 */
+			if( !is_array($request['object_type']) 
+				|| !isset($request['slug'], $request['label'], $request['singular_name'], $request['object_type']) 
+				|| fed_request_empty($request['slug']) 
+				|| fed_request_empty($request['label']) 
+				|| fed_request_empty($request['singular_name'])
+			){
+				wp_send_json_error(array(
+					'message' => __('Please fill mandatory fields', 'frontend-dashboard-custom-post'),
+				));
             }
             /**
              * Validate for same post key
@@ -113,8 +117,7 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
             $merge_cpt  = array_merge($old_cpt, $public_cpt);
             if ( ! isset($request['fed_cpt_edit']) && isset($merge_cpt[$request['slug']])) {
                 wp_send_json_error(array(
-                    'message' => $merge_cpt[$request['slug']].__(' Custom Post Type slug already exist',
-                            'frontend-dashboard-custom-post'),
+                    'message' => $merge_cpt[$request['slug']].__(' Custom Post Type slug already exist', 'frontend-dashboard-custom-post'),
                 ));
             }
             if (isset($request['fed_cpt_edit'])) {
@@ -143,16 +146,14 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
         /**
          * Register Custom Taxonomies
          */
-        public function fed_cp_register_custom_taxonomies()
-        {
+        public function fed_cp_register_custom_taxonomies(){
             $menus = get_option('fed_cp_custom_taxonomies');
             if ($menus) {
                 foreach ($menus as $index => $menu) {
                     $name              = fed_request_empty($menu['name']) ? $menu['singular_name'] : $menu['name'];
                     $menu_name         = fed_request_empty($menu['menu_name']) ? $menu['label'] : $menu['menu_name'];
                     $parent_item_colon = fed_request_empty($menu['parent_item_colon']) ? 'Parent Page:'.' Attributes' : $menu['parent_item_colon'];
-                    $all_items         = fed_request_empty($menu['all_items']) ? __('All Posts',
-                        'frontend-dashboard-custom-post') : $menu['all_items'];
+                    $all_items = fed_request_empty($menu['all_items']) ? __('All Posts', 'frontend-dashboard-custom-post') : $menu['all_items'];
                     $add_new_item      = fed_request_empty($menu['add_new_item']) ? 'Add New '.$name : $menu['add_new_item'];
                     $edit_item         = fed_request_empty($menu['edit_item']) ? 'Edit '.$name : $menu['edit_item'];
                     $view_item         = fed_request_empty($menu['view_item']) ? 'View '.$name : $menu['view_item'];
@@ -184,10 +185,8 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
                     }
 
                     $labels = array(
-                        'name'                       => _x($name, 'post type General Name',
-                            'frontend-dashboard-custom-post'),
-                        'singular_name'              => _x($menu['singular_name'], 'post type singular name',
-                            'frontend-dashboard-custom-post'),
+                        'name'                       => _x($name, 'post type General Name', 'frontend-dashboard-custom-post'),
+                        'singular_name'              => _x($menu['singular_name'], 'post type singular name', 'frontend-dashboard-custom-post'),
                         'menu_name'                  => __($menu_name, 'frontend-dashboard-custom-post'),
                         'parent_item_colon'          => __($parent_item_colon, 'frontend-dashboard-custom-post'),
                         'all_items'                  => __($all_items, 'frontend-dashboard-custom-post'),
@@ -196,16 +195,14 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
                         'update_item'                => __($update_item, 'frontend-dashboard-custom-post'),
                         'new_item_name'              => __($new_item_name, 'frontend-dashboard-custom-post'),
                         'popular_items'              => __($popular_items, 'frontend-dashboard-custom-post'),
-                        'choose_from_most_used'      => __($choose_from_most_used,
-                            'frontend-dashboard-custom-post'),
+                        'choose_from_most_used'      => __($choose_from_most_used, 'frontend-dashboard-custom-post'),
                         'add_or_remove_items'        => __($add_or_remove_items, 'frontend-dashboard-custom-post'),
-                        'separate_items_with_commas' => __($separate_items_with_commas,
-                            'frontend-dashboard-custom-post'),
+                        'separate_items_with_commas' => __($separate_items_with_commas, 'frontend-dashboard-custom-post'),
                         'view_item'                  => __($view_item, 'frontend-dashboard-custom-post'),
                         'search_items'               => __($search_items, 'frontend-dashboard-custom-post'),
                         'not_found'                  => __($not_found, 'frontend-dashboard-custom-post'),
                     );
-                    $args   = array(
+					$args = apply_filters('fed_cp_register_custom_taxonomies_args', array(
                         'label'              => __($menu['label'], 'frontend-dashboard-custom-post'),
                         'description'        => __($menu['description'], 'frontend-dashboard-custom-post'),
                         'labels'             => $labels,
@@ -223,7 +220,7 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
                         'query_var'          => fed_is_true_false($menu['query_var']),
                         'show_in_rest'       => fed_is_true_false($menu['show_in_rest']),
                         'rest_base'          => $menu['rest_base'],
-                    );
+                    ), $menu);
                     register_taxonomy($menu['slug'], array_keys($menu['object_type']), $args);
                 }
             }
@@ -279,11 +276,12 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
         protected function fed_cp_edit_custom_taxonomies($request)
         {
             $pt = get_option('fed_cp_custom_taxonomies');
+// varDump($pt);
             if ( ! isset($pt[$request['fed_type_id']])) {
                 $url = menu_page_url('fed_taxonomies', false).'&error=invalid_post_type';
                 wp_safe_redirect($url);
             }
-            $cpt = fed_cp_get_taxonomies_label($pt[$request['fed_type_id']]);
+            $cpt = fed_cp_get_taxonomies_label($pt[$request['fed_type_id']]);			
             ?>
             <div class="bc_fed container">
                 <!-- Show Empty form to add Dashboard Menu-->
@@ -326,15 +324,15 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
          * @param  array  $cpt  Custom Post Type.
          * @param  string  $type  Type.
          */
-        protected function fed_cp_custom_taxonomies_type_form($cpt, $type)
-        {
+        protected function fed_cp_custom_taxonomies_type_form($cpt, $type){
             $cpt_name   = '';
             $delete_btn = '';
             if ('Edit' === $type) {
                 $cpt_name   = isset($cpt['Basic Settings']['label']['input']['user_value']) ? $cpt['Basic Settings']['label']['input']['user_value'] : '';
                 $cpt_index  = isset($cpt['Basic Settings']['slug']['input']['user_value']) ? $cpt['Basic Settings']['slug']['input']['user_value'] : '';
-                $delete_btn = '<div data-toggle="popover" data-url='.admin_url('admin-ajax.php?fed_nonce='.wp_create_nonce('fed_nonce').'&action=fed_cp_delete_custom_taxonomies_type').' data-id="'.$cpt_index.'" 
-class="btn btn-danger fd_cp_custom_post_delete"> <i class="fa fa-trash fa-2x" aria-hidden="true"></i></div>';
+                $delete_btn = '<div data-toggle="popover" data-url='.admin_url('admin-ajax.php?fed_nonce='.wp_create_nonce('fed_nonce').'&action=fed_cp_delete_custom_taxonomies_type').' data-id="'.$cpt_index.'" class="btn btn-danger fd_cp_custom_post_delete">
+                	<i class="fa fa-trash fa-2x" aria-hidden="true" style="vertical-align:bottom;"></i> <span class="h4">'.__('Delete','frontend-dashboard-custom-post').'</span>
+                </div>';
             }
             ?>
             <div class="panel panel-primary">
@@ -342,19 +340,12 @@ class="btn btn-danger fd_cp_custom_post_delete"> <i class="fa fa-trash fa-2x" ar
                     <h3 class="panel-title">
                         <b><?php echo $type; ?> Taxonomy <?php echo $cpt_name; ?></b>
                         <span class="pull-right m-t-5">
-											<a href="<?php echo menu_page_url('fed_taxonomies',
-                                                false) ?>" class="fed_add_new_custom_post">
-												<i class="fa fa-plus"></i>
-												<?php _e('Add New Taxonomies', 'frontend-dashboard-custom-post') ?>
-											</a>
-										</span>
+							<a href="<?php echo menu_page_url('fed_taxonomies', false); ?>" class="fed_add_new_custom_post"><i class="fa fa-plus"></i><?php _e('Add New Taxonomies', 'frontend-dashboard-custom-post'); ?></a>
+						</span>
                     </h3>
                 </div>
                 <div class="panel-body">
                     <div class="text-right p-b-10">
-                        <button type="submit" class="btn  btn-danger">
-                            <i class="fa fa-save fa-2x" aria-hidden="true"></i>
-                        </button>
                         <?php echo $delete_btn; ?>
                     </div>
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -365,15 +356,10 @@ class="btn btn-danger fd_cp_custom_post_delete"> <i class="fa fa-trash fa-2x" ar
                             $in = 0 === $first ? 'in' : '';
                             ?>
                             <div class="panel panel-primary">
-                                <div class="panel-heading" id="<?php echo $id; ?>" role="button" data-toggle="collapse"
-                                     data-parent="#accordion" href="#collapse<?php echo $id; ?>" aria-expanded="true"
-                                     aria-controls="collapse<?php echo $id; ?>">
-                                    <h4 class="panel-title">
-                                        <?php echo $index; ?>
-                                    </h4>
+                                <div class="panel-heading" id="<?php echo $id; ?>" role="button" data-toggle="collapse"data-parent="#accordion" href="#collapse<?php echo $id; ?>" aria-expanded="true"aria-controls="collapse<?php echo $id; ?>">
+                                    <h4 class="panel-title"><?php echo $index; ?></h4>
                                 </div>
-                                <div id="collapse<?php echo $id; ?>" class="panel-collapse collapse <?php echo $in; ?>"
-                                     role="tabpanel" aria-labelledby="<?php echo $id; ?>">
+                                <div id="collapse<?php echo $id; ?>" class="panel-collapse collapse <?php echo $in; ?>" role="tabpanel" aria-labelledby="<?php echo $id; ?>">
                                     <div class="panel-body">
                                         <?php foreach ($taxs as $key => $tax) {
                                             if ($key === 'fed_extra' && is_array($tax)) {
@@ -438,10 +424,9 @@ class="btn btn-danger fd_cp_custom_post_delete"> <i class="fa fa-trash fa-2x" ar
                         ?>
                     </div>
                     <div class="text-right">
-                        <button type="submit" class="btn  btn-danger">
-                            <i class="fa fa-save fa-2x" aria-hidden="true"></i>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-save fa-2x" aria-hidden="true" style="vertical-align:bottom;"></i> <span class="h4"><?php _e('Save','frontend-dashboard-custom-post'); ?></h4>
                         </button>
-                        <?php echo $delete_btn; ?>
                     </div>
                 </div>
             </div>
