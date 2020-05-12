@@ -97,6 +97,7 @@ if ( ! class_exists('Fed_Cp_Menu')) {
 					'data'		=> array(
 						'ID'	=> $success,
 					),
+					'id'	=> $success,
 				));
 				
 			}
@@ -1044,17 +1045,18 @@ if ( ! class_exists('Fed_Cp_Menu')) {
 
 				<?php wp_nonce_field('fed_nonce', 'fed_nonce') ?>
 
-				<input type="hidden"
-					   name="post_type"
-					   value="<?php echo $post_type; ?>">
+				<input type = "hidden"
+					   name = "post_type"
+					   value = "<?php echo $post_type; ?>">
 
-				<input type="hidden"
-					   name="fed_post_type"
-					   value="<?php echo $post_type; ?>">
+				<input type = "hidden"
+					   name = "fed_post_type"
+					   value = "<?php echo $post_type; ?>">
 
-				<input type="hidden"
-					   name="ID"
-					   value="">
+				<input type = "hidden"
+					   name = "ID"
+					   value = ""
+					   id = "fed_post_id_hidden">
 
 				<div class="row fed_dashboard_item_field">
 					<div class="col-md-12">
