@@ -9,13 +9,11 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
     /**
      * Class Fed_Cp_Custom_Posts
      */
-    class Fed_Cp_Custom_Posts
-    {
+    class Fed_Cp_Custom_Posts{
         /**
          * FEDCP_Menu constructor.
          */
-        public function __construct()
-        {
+        public function __construct(){
             add_action('init', array($this, 'fed_cp_register_custom_post'));
             add_filter('fed_add_main_sub_menu', array($this, 'fed_cp_add_main_sub_menu'));
             add_action('wp_ajax_fed_cp_add_custom_post_type', array($this, 'fed_cp_add_custom_post_type_store'));
@@ -29,8 +27,7 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
          *
          * @return mixed
          */
-        public function fed_cp_add_main_sub_menu($menu)
-        {
+        public function fed_cp_add_main_sub_menu($menu){
             $menu['fed_custom_post'] = array(
                 'page_title' => __('Custom Post', 'frontend-dashboard-custom-post'),
                 'menu_title' => __('Custom Post', 'frontend-dashboard-custom-post'),
@@ -45,8 +42,7 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
         /**
          * Custom Post Layout.
          */
-        public function fed_admin_custom_post_layout()
-        {
+        public function fed_admin_custom_post_layout(){
             if (isset($_GET['page']) && 'fed_custom_post' === $_GET['page']) {
                 if (isset($_REQUEST['fed_type_id']) && ! empty($_REQUEST['fed_type_id'])) {
                     /**
@@ -59,6 +55,7 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
                      * List Custom Post Type
                      */
                     $this->fed_cp_add_custom_post_type();
+
                     fed_cp_custom_menu_icons_popup();
                 }
             }
@@ -67,13 +64,14 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
         /**
          * Delete Custom Post Type
          */
-        public function fed_cp_delete_custom_post_type_delete()
-        {
+        public function fed_cp_delete_custom_post_type_delete(){
             $request = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
             fed_verify_nonce($_GET);
             $pt = get_option('fed_cp_custom_posts');
             if ( ! isset($pt[$request['id']])) {
-                wp_send_json_error(array('message' => __('Invalid Custom Post ID', 'frontend-dashboard-custom-post')));
+                wp_send_json_error(array(
+                	'message' => __('Invalid Custom Post ID', 'frontend-dashboard-custom-post'),
+                ));
             }
             $url = admin_url().'admin.php?page=fed_custom_post';
             unset($pt[$request['id']]);
@@ -87,8 +85,7 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
         /**
          * Add Custom Post Type
          */
-        public function fed_cp_add_custom_post_type_store()
-        {
+        public function fed_cp_add_custom_post_type_store(){
             $request      = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
             $redirect_url = admin_url().'admin.php?page=fed_custom_post';
             $status       = __('added', 'frontend-dashboard-custom-post');
@@ -143,8 +140,7 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
         /**
          * Register Custom Post
          */
-        public function fed_cp_register_custom_post()
-        {
+        public function fed_cp_register_custom_post(){
             $menus = get_option('fed_cp_custom_posts');
             if ($menus) {
                 foreach ($menus as $index => $menu) {
@@ -328,8 +324,7 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
         /**
          * Add Custom Post Type
          */
-        protected function fed_cp_add_custom_post_type()
-        {
+        protected function fed_cp_add_custom_post_type(){
 
             $cpt = fed_cp_get_custom_post_types();
             $pt  = get_option('fed_cp_custom_posts');
@@ -373,8 +368,7 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
          *
          * @param  array  $request  Request.
          */
-        protected function fed_cp_edit_custom_post_type($request)
-        {
+        protected function fed_cp_edit_custom_post_type($request){
             $pt = get_option('fed_cp_custom_posts');
             if ( ! isset($pt[$request['fed_type_id']])) {
                 $url = menu_page_url('fed_custom_post', false).'&error=invalid_post_type';
@@ -423,8 +417,7 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
          * @param  array  $cpt  Custom Post Type.
          * @param  string  $type  Type.
          */
-        protected function fed_cp_custom_post_type_form($cpt, $type)
-        {
+        protected function fed_cp_custom_post_type_form($cpt, $type){
             $cpt_name   = '';
             $delete_btn = '';
             if ('Edit' === $type) {
@@ -511,8 +504,7 @@ if ( ! class_exists('Fed_Cp_Custom_Posts')) {
          *
          * @param  array  $pt  Post Type.
          */
-        protected function fed_cp_custom_post_type_sidebar($pt)
-        {
+        protected function fed_cp_custom_post_type_sidebar($pt){
             ?>
             <div class="row p-b-20">
                 <div href="#" class="col-md-12 btn btn-warning">

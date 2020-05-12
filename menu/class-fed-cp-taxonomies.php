@@ -9,13 +9,11 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
     /**
      * Class Fed_Cp_Taxonomies
      */
-    class Fed_Cp_Taxonomies
-    {
+    class Fed_Cp_Taxonomies{
         /**
          * FEDCP_Menu constructor.
          */
-        public function __construct()
-        {
+        public function __construct(){
             add_action('init', array($this, 'fed_cp_register_custom_taxonomies'));
             add_filter('fed_add_main_sub_menu', array($this, 'fed_cp_add_taxonomies_menu'));
             add_action('wp_ajax_fed_cp_add_custom_taxonomies', array($this, 'fed_cp_add_custom_taxonomies'));
@@ -32,8 +30,7 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
          *
          * @return mixed
          */
-        public function fed_cp_add_taxonomies_menu($menu)
-        {
+        public function fed_cp_add_taxonomies_menu($menu){
             $menu['fed_taxonomies'] = array(
                 'page_title' => __('Custom Taxonomies', 'frontend-dashboard-custom-post'),
                 'menu_title' => __('Custom Taxonomies', 'frontend-dashboard-custom-post'),
@@ -48,8 +45,7 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
         /**
          * Admin Taxonomies Layout
          */
-        public function fed_admin_taxonomies_layout()
-        {
+        public function fed_admin_taxonomies_layout(){
             if (isset($_GET['page']) && 'fed_taxonomies' === $_GET['page']) {
                 if (isset($_REQUEST['fed_type_id']) && ! empty($_REQUEST['fed_type_id'])) {
                     /**
@@ -68,13 +64,14 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
         /**
          * Delete Custom Taxonomies Type
          */
-        public function fed_cp_delete_custom_taxonomies_type_delete()
-        {
+        public function fed_cp_delete_custom_taxonomies_type_delete(){
             $request = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
             fed_verify_nonce($_GET);
             $pt = get_option('fed_cp_custom_taxonomies');
             if ( ! isset($pt[$request['id']])) {
-                wp_send_json_error(array('message' => __('Invalid Custom Post ID', 'frontend-dashboard-custom-post')));
+                wp_send_json_error(array(
+                	'message' => __('Invalid Custom Post ID', 'frontend-dashboard-custom-post'),
+                ));
             }
             $url = admin_url().'admin.php?page=fed_taxonomies';
             unset($pt[$request['id']]);
@@ -229,8 +226,7 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
         /**
          * Add Custom Taxonomies Type
          */
-        protected function fed_cp_add_custom_taxonomies_type()
-        {
+        protected function fed_cp_add_custom_taxonomies_type(){
             $cpt = fed_cp_get_taxonomies_label();
             $pt  = get_option('fed_cp_custom_taxonomies', false);
             ?>
@@ -273,10 +269,8 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
          *
          * @param  array  $request  Request.
          */
-        protected function fed_cp_edit_custom_taxonomies($request)
-        {
+        protected function fed_cp_edit_custom_taxonomies($request){
             $pt = get_option('fed_cp_custom_taxonomies');
-// varDump($pt);
             if ( ! isset($pt[$request['fed_type_id']])) {
                 $url = menu_page_url('fed_taxonomies', false).'&error=invalid_post_type';
                 wp_safe_redirect($url);
@@ -438,8 +432,7 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
          *
          * @param  array  $taxs  Taxonomies.
          */
-        protected function fed_cp_custom_taxonomies_type_sidebar($taxs)
-        {
+        protected function fed_cp_custom_taxonomies_type_sidebar($taxs){
             ?>
             <div class="row p-b-20">
                 <div href="#" class="col-md-12 btn btn-warning">
