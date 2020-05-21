@@ -5,23 +5,20 @@
  * @package frontend-dashboard-custom-post
  */
 
-if ( ! class_exists('Fed_Cp_Taxonomies')) {
+if( !class_exists('Fed_Cp_Taxonomies') ){
     /**
      * Class Fed_Cp_Taxonomies
      */
     class Fed_Cp_Taxonomies{
-        /**
-         * FEDCP_Menu constructor.
-         */
-        public function __construct(){
-            add_action('init', array($this, 'fed_cp_register_custom_taxonomies'));
-            add_filter('fed_add_main_sub_menu', array($this, 'fed_cp_add_taxonomies_menu'));
-            add_action('wp_ajax_fed_cp_add_custom_taxonomies', array($this, 'fed_cp_add_custom_taxonomies'));
-            add_action('wp_ajax_fed_cp_delete_custom_taxonomies_type', array(
-                $this,
-                'fed_cp_delete_custom_taxonomies_type_delete',
-            ));
-        }
+		/**
+		 * FEDCP_Menu constructor.
+		 */
+		public function __construct(){
+			add_action('init', array($this, 'fed_cp_register_custom_taxonomies'));
+			add_filter('fed_add_main_sub_menu', array($this, 'fed_cp_add_taxonomies_menu'));
+			add_action('wp_ajax_fed_cp_add_custom_taxonomies', array($this, 'fed_cp_add_custom_taxonomies'));
+			add_action('wp_ajax_fed_cp_delete_custom_taxonomies_type', array( $this, 'fed_cp_delete_custom_taxonomies_type_delete'));
+		}
 
         /**
          * Add Taxonomies Menu
@@ -61,33 +58,33 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
             }
         }
 
-        /**
-         * Delete Custom Taxonomies Type
-         */
-        public function fed_cp_delete_custom_taxonomies_type_delete(){
-            $request = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-            fed_verify_nonce($_GET);
-            $pt = get_option('fed_cp_custom_taxonomies');
-            if ( ! isset($pt[$request['id']])) {
-                wp_send_json_error(array(
-                	'message' => __('Invalid Custom Post ID', 'frontend-dashboard-custom-post'),
-                ));
-            }
-            $url = admin_url().'admin.php?page=fed_taxonomies';
-            unset($pt[$request['id']]);
-            update_option('fed_cp_custom_taxonomies', $pt);
-            wp_send_json_success(array(
-                'message' => __('Custom Post Type Successfully Deleted', 'frontend-dashboard-custom-post'),
-                'reload'  => $url,
-            ));
-        }
+		/**
+		 * Delete Custom Taxonomies Type
+		 */
+		public function fed_cp_delete_custom_taxonomies_type_delete(){
+			$request = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+			fed_verify_nonce($_GET);
+			$pt = get_option('fed_cp_custom_taxonomies');
+			if( !isset($pt[$request['id']]) ){
+				wp_send_json_error(array(
+					'message' => __('Invalid Custom Post ID', 'frontend-dashboard-custom-post'),
+				));
+			}
+			$url = admin_url('admin.php?page=fed_taxonomies');
+			unset($pt[$request['id']]);
+			update_option('fed_cp_custom_taxonomies', $pt);
+			wp_send_json_success(array(
+				'message' => __('Custom Post Type Successfully Deleted', 'frontend-dashboard-custom-post'),
+				'reload'  => $url,
+			));
+		}
 
-        /**
-         * Add Custom Taxonomies
-         */
+		/**
+		 * Add Custom Taxonomies
+		 */
 		public function fed_cp_add_custom_taxonomies(){
 			$request      = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-			$redirect_url = admin_url().'admin.php?page=fed_taxonomies';
+			$redirect_url = admin_url('admin.php?page=fed_taxonomies');
 			$status       = 'added';
 			/**
 			 * Check for Nonce
@@ -117,8 +114,8 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
                     'message' => $merge_cpt[$request['slug']].__(' Custom Post Type slug already exist', 'frontend-dashboard-custom-post'),
                 ));
             }
-            if (isset($request['fed_cpt_edit'])) {
-                $redirect_url = admin_url().'admin.php?page=fed_taxonomies&fed_type_id='.$request['slug'];
+            if( isset($request['fed_cpt_edit']) ){
+                $redirect_url = admin_url('admin.php?page=fed_taxonomies&fed_type_id='.$request['slug']);
                 $status       = 'updated';
             }
 
@@ -130,98 +127,97 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
             $old_cpt[$request['slug']] = $output;
 
 
-            update_option('fed_cp_custom_taxonomies', $old_cpt);
+			update_option('fed_cp_custom_taxonomies', $old_cpt);
 
-            wp_send_json_success(array(
-                /* translators: 1:  Taxonomy Name, 2: Status */
-                'message' => sprintf(__('Taxonomy %1$s successfully %2$s', 'frontend-dashboard-custom-post'),
-                    $request['label'], $status),
-                'reload'  => $redirect_url,
-            ));
-        }
+			wp_send_json_success(array(
+				/* translators: 1:  Taxonomy Name, 2: Status */
+				'message' => sprintf(__('Taxonomy %1$s successfully %2$s', 'frontend-dashboard-custom-post'), $request['label'], $status),
+				'reload'  => $redirect_url,
+			));
+		}
 
-        /**
-         * Register Custom Taxonomies
-         */
-        public function fed_cp_register_custom_taxonomies(){
-            $menus = get_option('fed_cp_custom_taxonomies');
-            if ($menus) {
-                foreach ($menus as $index => $menu) {
-                    $name              = fed_request_empty($menu['name']) ? $menu['singular_name'] : $menu['name'];
-                    $menu_name         = fed_request_empty($menu['menu_name']) ? $menu['label'] : $menu['menu_name'];
-                    $parent_item_colon = fed_request_empty($menu['parent_item_colon']) ? 'Parent Page:'.' Attributes' : $menu['parent_item_colon'];
-                    $all_items = fed_request_empty($menu['all_items']) ? __('All Posts', 'frontend-dashboard-custom-post') : $menu['all_items'];
-                    $add_new_item      = fed_request_empty($menu['add_new_item']) ? 'Add New '.$name : $menu['add_new_item'];
-                    $edit_item         = fed_request_empty($menu['edit_item']) ? 'Edit '.$name : $menu['edit_item'];
-                    $view_item         = fed_request_empty($menu['view_item']) ? 'View '.$name : $menu['view_item'];
+		/**
+		 * Register Custom Taxonomies
+		 */
+		public function fed_cp_register_custom_taxonomies(){
+			$menus = get_option('fed_cp_custom_taxonomies');
+			if( $menus ){
+				foreach( $menus as $index => $menu ){
+					$name              = fed_request_empty($menu['name']) ? $menu['singular_name'] : $menu['name'];
+					$menu_name         = fed_request_empty($menu['menu_name']) ? $menu['label'] : $menu['menu_name'];
+					$parent_item_colon = fed_request_empty($menu['parent_item_colon']) ? 'Parent Page:'.' Attributes' : $menu['parent_item_colon'];
+					$all_items = fed_request_empty($menu['all_items']) ? __('All Posts', 'frontend-dashboard-custom-post') : $menu['all_items'];
+					$add_new_item      = fed_request_empty($menu['add_new_item']) ? 'Add New '.$name : $menu['add_new_item'];
+					$edit_item         = fed_request_empty($menu['edit_item']) ? 'Edit '.$name : $menu['edit_item'];
+					$view_item         = fed_request_empty($menu['view_item']) ? 'View '.$name : $menu['view_item'];
 
-                    $update_item                = fed_request_empty($menu['update_item']) ? 'Update '.$name : $menu['update_item'];
-                    $new_item_name              = fed_request_empty($menu['new_item_name']) ? 'New '.$name : $menu['new_item_name'];
-                    $popular_items              = fed_request_empty($menu['popular_items']) ? 'Popular '.$name : $menu['popular_items'];
-                    $choose_from_most_used      = fed_request_empty($menu['choose_from_most_used']) ? 'Choose from most used '.$name : $menu['choose_from_most_used'];
-                    $add_or_remove_items        = fed_request_empty($menu['add_or_remove_items']) ? 'Add or Remove '.$name : $menu['add_or_remove_items'];
-                    $separate_items_with_commas = fed_request_empty($menu['separate_items_with_commas']) ? 'Separate '.$name.' with commas ' : $menu['separate_items_with_commas'];
+					$update_item                = fed_request_empty($menu['update_item']) ? 'Update '.$name : $menu['update_item'];
+					$new_item_name              = fed_request_empty($menu['new_item_name']) ? 'New '.$name : $menu['new_item_name'];
+					$popular_items              = fed_request_empty($menu['popular_items']) ? 'Popular '.$name : $menu['popular_items'];
+					$choose_from_most_used      = fed_request_empty($menu['choose_from_most_used']) ? 'Choose from most used '.$name : $menu['choose_from_most_used'];
+					$add_or_remove_items        = fed_request_empty($menu['add_or_remove_items']) ? 'Add or Remove '.$name : $menu['add_or_remove_items'];
+					$separate_items_with_commas = fed_request_empty($menu['separate_items_with_commas']) ? 'Separate '.$name.' with commas ' : $menu['separate_items_with_commas'];
 
-                    $search_items = fed_request_empty($menu['search_items']) ? 'Search '.$name : $menu['search_items'];
-                    $not_found    = fed_request_empty($menu['not_found']) ? 'No Post Found' : $menu['not_found'];
+					$search_items = fed_request_empty($menu['search_items']) ? 'Search '.$name : $menu['search_items'];
+					$not_found    = fed_request_empty($menu['not_found']) ? 'No Post Found' : $menu['not_found'];
 
 
-                    if (fed_is_true_false($menu['rewrite'])) {
-                        $rewrite = true;
-                        if ( ! fed_request_empty($menu['rewrite_slug'])) {
-                            $rewrite = array('slug' => $menu['rewrite_slug']);
-                        }
-                    } else {
-                        $rewrite = false;
-                    }
-                    if (isset($menu['supports'])) {
-                        $supports = array_keys($menu['supports']);
-                    }
-                    if (isset($menu['taxonomies'])) {
-                        $taxonomies = array_keys($menu['taxonomies']);
-                    }
+					if( fed_is_true_false($menu['rewrite']) ){
+						$rewrite = true;
+						if( !fed_request_empty($menu['rewrite_slug']) ){
+							$rewrite = array('slug' => $menu['rewrite_slug']);
+						}
+					}else{
+						$rewrite = false;
+					}
+					if( isset($menu['supports']) ){
+						$supports = array_keys($menu['supports']);
+					}
+					if( isset($menu['taxonomies']) ){
+						$taxonomies = array_keys($menu['taxonomies']);
+					}
 
-                    $labels = array(
-                        'name'                       => _x($name, 'post type General Name', 'frontend-dashboard-custom-post'),
-                        'singular_name'              => _x($menu['singular_name'], 'post type singular name', 'frontend-dashboard-custom-post'),
-                        'menu_name'                  => __($menu_name, 'frontend-dashboard-custom-post'),
-                        'parent_item_colon'          => __($parent_item_colon, 'frontend-dashboard-custom-post'),
-                        'all_items'                  => __($all_items, 'frontend-dashboard-custom-post'),
-                        'add_new_item'               => __($add_new_item, 'frontend-dashboard-custom-post'),
-                        'edit_item'                  => __($edit_item, 'frontend-dashboard-custom-post'),
-                        'update_item'                => __($update_item, 'frontend-dashboard-custom-post'),
-                        'new_item_name'              => __($new_item_name, 'frontend-dashboard-custom-post'),
-                        'popular_items'              => __($popular_items, 'frontend-dashboard-custom-post'),
-                        'choose_from_most_used'      => __($choose_from_most_used, 'frontend-dashboard-custom-post'),
-                        'add_or_remove_items'        => __($add_or_remove_items, 'frontend-dashboard-custom-post'),
-                        'separate_items_with_commas' => __($separate_items_with_commas, 'frontend-dashboard-custom-post'),
-                        'view_item'                  => __($view_item, 'frontend-dashboard-custom-post'),
-                        'search_items'               => __($search_items, 'frontend-dashboard-custom-post'),
-                        'not_found'                  => __($not_found, 'frontend-dashboard-custom-post'),
-                    );
+					$labels = array(
+						'name'                       => _x($name, 'post type General Name', 'frontend-dashboard-custom-post'),
+						'singular_name'              => _x($menu['singular_name'], 'post type singular name', 'frontend-dashboard-custom-post'),
+						'menu_name'                  => __($menu_name, 'frontend-dashboard-custom-post'),
+						'parent_item_colon'          => __($parent_item_colon, 'frontend-dashboard-custom-post'),
+						'all_items'                  => __($all_items, 'frontend-dashboard-custom-post'),
+						'add_new_item'               => __($add_new_item, 'frontend-dashboard-custom-post'),
+						'edit_item'                  => __($edit_item, 'frontend-dashboard-custom-post'),
+						'update_item'                => __($update_item, 'frontend-dashboard-custom-post'),
+						'new_item_name'              => __($new_item_name, 'frontend-dashboard-custom-post'),
+						'popular_items'              => __($popular_items, 'frontend-dashboard-custom-post'),
+						'choose_from_most_used'      => __($choose_from_most_used, 'frontend-dashboard-custom-post'),
+						'add_or_remove_items'        => __($add_or_remove_items, 'frontend-dashboard-custom-post'),
+						'separate_items_with_commas' => __($separate_items_with_commas, 'frontend-dashboard-custom-post'),
+						'view_item'                  => __($view_item, 'frontend-dashboard-custom-post'),
+						'search_items'               => __($search_items, 'frontend-dashboard-custom-post'),
+						'not_found'                  => __($not_found, 'frontend-dashboard-custom-post'),
+					);
 					$args = apply_filters('fed_cp_register_custom_taxonomies_args', array(
-                        'label'              => __($menu['label'], 'frontend-dashboard-custom-post'),
-                        'description'        => __($menu['description'], 'frontend-dashboard-custom-post'),
-                        'labels'             => $labels,
-                        'hierarchical'       => fed_is_true_false($menu['hierarchical']),
-                        'show_tagcloud'      => fed_is_true_false($menu['show_tagcloud']),
-                        'show_in_quick_edit' => fed_is_true_false($menu['show_in_quick_edit']),
-                        'show_admin_column'  => fed_is_true_false($menu['show_admin_column']),
-                        'sort'               => fed_is_true_false($menu['sort']),
-                        'public'             => fed_is_true_false($menu['public']),
-                        'show_ui'            => fed_is_true_false($menu['show_ui']),
-                        'show_in_menu'       => fed_is_true_false($menu['show_in_menu']),
-                        'show_in_nav_menus'  => fed_is_true_false($menu['show_in_nav_menus']),
-                        'publicly_queryable' => fed_is_true_false($menu['publicly_queryable']),
-                        'rewrite'            => $rewrite,
-                        'query_var'          => fed_is_true_false($menu['query_var']),
-                        'show_in_rest'       => fed_is_true_false($menu['show_in_rest']),
-                        'rest_base'          => $menu['rest_base'],
-                    ), $menu);
-                    register_taxonomy($menu['slug'], array_keys($menu['object_type']), $args);
-                }
-            }
-        }
+						'label'              => __($menu['label'], 'frontend-dashboard-custom-post'),
+						'description'        => __($menu['description'], 'frontend-dashboard-custom-post'),
+						'labels'             => $labels,
+						'hierarchical'       => fed_is_true_false($menu['hierarchical']),
+						'show_tagcloud'      => fed_is_true_false($menu['show_tagcloud']),
+						'show_in_quick_edit' => fed_is_true_false($menu['show_in_quick_edit']),
+						'show_admin_column'  => fed_is_true_false($menu['show_admin_column']),
+						'sort'               => fed_is_true_false($menu['sort']),
+						'public'             => fed_is_true_false($menu['public']),
+						'show_ui'            => fed_is_true_false($menu['show_ui']),
+						'show_in_menu'       => fed_is_true_false($menu['show_in_menu']),
+						'show_in_nav_menus'  => fed_is_true_false($menu['show_in_nav_menus']),
+						'publicly_queryable' => fed_is_true_false($menu['publicly_queryable']),
+						'rewrite'            => $rewrite,
+						'query_var'          => fed_is_true_false($menu['query_var']),
+						'show_in_rest'       => fed_is_true_false($menu['show_in_rest']),
+						'rest_base'          => $menu['rest_base'],
+					), $menu);
+					register_taxonomy($menu['slug'], array_keys($menu['object_type']), $args);
+				}
+			}
+		}
 
         /**
          * Add Custom Taxonomies Type
@@ -245,9 +241,9 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
                     <div class="col-md-9">
                         <form method="post"
                               class="fed_admin_menu fed_ajax"
-                              action="<?php echo admin_url('admin-ajax.php?action=fed_cp_add_custom_taxonomies') ?>">
+                              action="<?php echo admin_url('admin-ajax.php?action=fed_cp_add_custom_taxonomies'); ?>">
 
-                            <?php wp_nonce_field('fed_nonce', 'fed_nonce') ?>
+                            <?php wp_nonce_field('fed_nonce', 'fed_nonce'); ?>
 
                             <?php echo fed_loader(); ?>
                             <?php $this->fed_cp_custom_taxonomies_type_form($cpt, 'Add'); ?>
@@ -275,7 +271,7 @@ if ( ! class_exists('Fed_Cp_Taxonomies')) {
                 $url = menu_page_url('fed_taxonomies', false).'&error=invalid_post_type';
                 wp_safe_redirect($url);
             }
-            $cpt = fed_cp_get_taxonomies_label($pt[$request['fed_type_id']]);			
+            $cpt = fed_cp_get_taxonomies_label($pt[$request['fed_type_id']]);
             ?>
             <div class="bc_fed container">
                 <!-- Show Empty form to add Dashboard Menu-->
