@@ -1,5 +1,6 @@
 jQuery(document).ready(function ($) {
         var b = $('.bc_fed');
+		var fed_dashboard_item_field_wrapper = $( '.fed_dashboard_item_field_wrapper' );
         b.on('keyup', '.fed_convert_space_to_underscore', function (e) {
             var value, original_value;
             value = original_value = $(this).val();
@@ -50,6 +51,16 @@ jQuery(document).ready(function ($) {
                 });
             e.preventDefault();
         });
+
+		$( '.fed_post_status_on_hover' ).hide();
+
+		fed_dashboard_item_field_wrapper.on( 'mouseover', function () {
+			$( this ).find( '.fed_post_status_on_hover' ).show();
+		} );
+
+		fed_dashboard_item_field_wrapper.on( 'mouseleave', function () {
+			$( this ).find( '.fed_post_status_on_hover' ).hide();
+		} );
 
         function fed_toggle_loader() {
             $('.preview-area').toggleClass('hide');
