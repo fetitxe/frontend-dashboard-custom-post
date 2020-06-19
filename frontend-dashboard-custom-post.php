@@ -28,7 +28,7 @@ if ( $fed_check && is_plugin_active( 'frontend-dashboard/frontend-dashboard.php'
 	/**
 	 * App Name
 	 */
-	define( 'FED_CP_APP_NAME', 'Frontend Dashboard Pages' );
+	define( 'FED_CP_APP_NAME', 'Frontend Dashboard Custom Post' );
 
 	/**
 	 * Root Path

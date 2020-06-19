@@ -683,7 +683,7 @@ if ( ! class_exists('Fed_Cp_Menu')) {
 											aria-expanded="true"
 											aria-controls="collapse<?php echo esc_attr( $tab_index . $no ); ?>">
 										<h4 class="panel-title">
-											<a><?php echo esc_attr( $tab['name'] ); ?></a>
+											<a><?php echo $tab['name']; ?></a>
 										</h4>
 									</div>
 									<div id="collapse<?php echo esc_attr( $tab_index . $no ); ?>"
@@ -705,7 +705,7 @@ if ( ! class_exists('Fed_Cp_Menu')) {
 														if (isset($post_type['heading'])) {
 															?>
 															<div class="bg-primary p-10">
-																<?php echo esc_attr( isset( $post_type['heading'] ) ? $post_type['heading'] : '' ); ?>
+																<?php echo isset( $post_type['heading'] )? $post_type['heading'] : ''; ?>
 															</div>
 															<?php
 														} 
@@ -728,7 +728,7 @@ if ( ! class_exists('Fed_Cp_Menu')) {
 																<div class="col-md-6">
 																	<?php
 																	if (isset($extra['label_title'])) {
-																		echo esc_attr( $extra['label_title'] );
+																		echo $extra['label_title'];
 																	}
 																	// phpcs:ignore
 																	echo fed_get_input_details($extra);
