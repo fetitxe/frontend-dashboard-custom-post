@@ -428,8 +428,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['hierarchical']) ? $request['hierarchical'] : '',
 						'input_meta'  => 'hierarchical',
 						'input_value' => array(
-							'false' => 'False',
-							'true' => 'True'
+							'false' => __('False'),
+							'true' => __('True')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -443,8 +443,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['public']) ? $request['public'] : '',
 						'input_meta'  => 'public',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -458,8 +458,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['show_ui']) ? $request['show_ui'] : '',
 						'input_meta'  => 'show_ui',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -473,8 +473,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['show_in_menu']) ? $request['show_in_menu'] : '',
 						'input_meta'  => 'show_in_menu',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -488,8 +488,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['show_in_admin_bar']) ? $request['show_in_admin_bar'] : '',
 						'input_meta'  => 'show_in_admin_bar',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -503,8 +503,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['show_in_nav_menus']) ? $request['show_in_nav_menus'] : '',
 						'input_meta'  => 'show_in_nav_menus',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -518,8 +518,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['can_export']) ? $request['can_export'] : '',
 						'input_meta'  => 'can_export',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -533,8 +533,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['has_archive']) ? $request['has_archive'] : '',
 						'input_meta'  => 'has_archive',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -548,8 +548,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['exclude_from_search']) ? $request['exclude_from_search'] : '',
 						'input_meta'  => 'exclude_from_search',
 						'input_value' => array(
-							'false' => 'False',
-							'true' => 'True'
+							'false' => __('False'),
+							'true' => __('True')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -563,8 +563,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['publicly_queryable']) ? $request['publicly_queryable'] : '',
 						'input_meta'  => 'publicly_queryable',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -578,8 +578,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['query_var']) ? $request['query_var'] : '',
 						'input_meta'  => 'query_var',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -593,8 +593,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['delete_with_user']) ? $request['delete_with_user'] : '',
 						'input_meta'  => 'delete_with_user',
 						'input_value' => array(
-							'false' => 'False',
-							'true' => 'True'
+							'false' => __('False'),
+							'true' => __('True')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -608,8 +608,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['show_in_rest']) ? $request['show_in_rest'] : '',
 						'input_meta'  => 'show_in_rest',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -635,8 +635,8 @@ if( !function_exists('fed_cp_get_custom_post_types') ){
 						'user_value'  => isset($request['rewrite']) ? $request['rewrite'] : '',
 						'input_meta'  => 'rewrite',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -1048,8 +1048,8 @@ if( !function_exists('fed_cp_get_taxonomies_label') ){
 						'user_value'  => isset($request['hierarchical']) ? $request['hierarchical'] : '',
 						'input_meta'  => 'hierarchical',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -1063,8 +1063,8 @@ if( !function_exists('fed_cp_get_taxonomies_label') ){
 						'user_value'  => isset($request['show_tagcloud']) ? $request['show_tagcloud'] : '',
 						'input_meta'  => 'show_tagcloud',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -1078,8 +1078,8 @@ if( !function_exists('fed_cp_get_taxonomies_label') ){
 						'user_value'  => isset($request['show_in_quick_edit']) ? $request['show_in_quick_edit'] : '',
 						'input_meta'  => 'show_in_quick_edit',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -1093,8 +1093,8 @@ if( !function_exists('fed_cp_get_taxonomies_label') ){
 						'user_value'  => isset($request['show_admin_column']) ? $request['show_admin_column'] : '',
 						'input_meta'  => 'show_admin_column',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -1108,8 +1108,8 @@ if( !function_exists('fed_cp_get_taxonomies_label') ){
 						'user_value'  => isset($request['sort']) ? $request['sort'] : '',
 						'input_meta'  => 'sort',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -1123,8 +1123,8 @@ if( !function_exists('fed_cp_get_taxonomies_label') ){
 						'user_value'  => isset($request['public']) ? $request['public'] : '',
 						'input_meta'  => 'public',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -1138,8 +1138,8 @@ if( !function_exists('fed_cp_get_taxonomies_label') ){
 						'user_value'  => isset($request['show_ui']) ? $request['show_ui'] : '',
 						'input_meta'  => 'show_ui',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -1153,8 +1153,8 @@ if( !function_exists('fed_cp_get_taxonomies_label') ){
 						'user_value'  => isset($request['show_in_menu']) ? $request['show_in_menu'] : '',
 						'input_meta'  => 'show_in_menu',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -1168,8 +1168,8 @@ if( !function_exists('fed_cp_get_taxonomies_label') ){
 						'user_value'  => isset($request['show_in_nav_menus']) ? $request['show_in_nav_menus'] : '',
 						'input_meta'  => 'show_in_nav_menus',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -1183,8 +1183,8 @@ if( !function_exists('fed_cp_get_taxonomies_label') ){
 						'user_value'  => isset($request['publicly_queryable']) ? $request['publicly_queryable'] : '',
 						'input_meta'  => 'publicly_queryable',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -1198,8 +1198,8 @@ if( !function_exists('fed_cp_get_taxonomies_label') ){
 						'user_value'  => isset($request['query_var']) ? $request['query_var'] : '',
 						'input_meta'  => 'query_var',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -1213,8 +1213,8 @@ if( !function_exists('fed_cp_get_taxonomies_label') ){
 						'user_value'  => isset($request['show_in_rest']) ? $request['show_in_rest'] : '',
 						'input_meta'  => 'show_in_rest',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(
@@ -1240,8 +1240,8 @@ if( !function_exists('fed_cp_get_taxonomies_label') ){
 						'user_value'  => isset($request['rewrite']) ? $request['rewrite'] : '',
 						'input_meta'  => 'rewrite',
 						'input_value' => array(
-							'true' => 'True',
-							'false' => 'False'
+							'true' => __('True'),
+							'false' => __('False')
 						),
 					),
 					'help_message' => fed_show_help_message(array(

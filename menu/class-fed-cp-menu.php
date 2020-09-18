@@ -40,35 +40,39 @@ if ( ! class_exists('Fed_Cp_Menu')) {
 			$fed_admin_options = fed_get_post_settings_by_type($post['fed_post_type']);
 			$user_role = fed_get_current_user_role();
 
-			if ( isset( $post['ID'] ) && ! empty( $post['ID'] ) ) {
+			if( isset($post['ID']) && !empty($post['ID']) ){
 				$user_post = get_post( (int) $post['ID'] );
-				if ( (int) get_current_user_id() === (int) $user_post->post_author || fed_is_admin() ) {
+				if( (int) get_current_user_id() === (int) $user_post->post_author || fed_is_admin() ){
 					$default['ID']          = (int) $user_post->ID;
 					$default['post_author'] = (int) $user_post->post_author;
-				} else {
+				}else{
 					$error = new WP_Error( 'fed_dashboard_add_post_invalid_user_access',
-						__( 'Invalid User Access', 'frontend-dashboard-custom-post' )
+						__( 'Invalid User Access', 'frontend-dashboard-custom-post')
 					);
-					wp_send_json_error( array( 'message' => $error->get_error_messages() ) );
+
+					wp_send_json_error(array( 
+						'message' => $error->get_error_messages()
+					));
 				}
 			}
 		
 			if( count( array_intersect($user_role, array_keys($fed_admin_options['permissions']['post_permission'])) ) > 0 ){
-				$extras      = fed_fetch_rows_by_table(BC_FED_TABLE_POST);
+				// $extras = fed_fetch_rows_by_table(BC_FED_TABLE_POST);
+				$extras = fed_fetch_table_rows_by_key_value(BC_FED_TABLE_POST, 'post_type', $post['fed_post_type']);
 				$post_status_settings = isset( $fed_admin_options['settings']['fed_post_status'] ) ? sanitize_text_field( $fed_admin_options['settings']['fed_post_status'] ) : 'publish';
 
-				if ( ! fed_is_admin() ) {
-					if ( 'publish' === $post_status_settings ) {
+				if( !fed_is_admin() ){
+					if( 'publish' === $post_status_settings ){
 						$post_status = isset( $post['post_status'] ) ? sanitize_text_field( $post['post_status'] ) : 'publish';
 					}
-					if ( 'pending' === $post_status_settings || 'draft' === $post_status_settings ) {
+					if( 'pending' === $post_status_settings || 'draft' === $post_status_settings ){
 						$post_status = isset( $post['post_status'] ) && ( 'pending' === $post['post_status'] || $post['draft'] ) ?
 							sanitize_text_field( $post['post_status'] ) : 'draft';
 					}
 				}
 
-				if ( fed_is_admin() ) {
-					$post_status = fed_get_data( 'post_status', $post, $post_status_settings );
+				if( fed_is_admin() ){
+					$post_status = fed_get_data('post_status', $post, $post_status_settings );
 				}
 
 				if( empty($post['post_title']) ){
@@ -85,7 +89,6 @@ if ( ! class_exists('Fed_Cp_Menu')) {
 				$default['post_type']      = isset( $post['post_type'] ) ? sanitize_text_field( $post['post_type'] ) : 'post';
 				$default['comment_status'] = isset( $post['comment_status'] ) ? sanitize_text_field( $post['comment_status'] ) : 'open';
 				$default['post_status']    = fed_sanitize_text_field( $post_status );
-
 
 				if( isset($post['_thumbnail_id'] )){
 					$default['_thumbnail_id'] = ('' == $post['_thumbnail_id'])? -1 : (int) $post['_thumbnail_id'];
@@ -105,16 +108,16 @@ if ( ! class_exists('Fed_Cp_Menu')) {
 					}
 				}
 
-				$post_id = wp_insert_post( $default );
+				$post_id = wp_insert_post(apply_filters('fed_dashboard_add_edit_post', $default, $post));
 
-				if ( $post_id instanceof WP_Error ) {
-					wp_send_json_error( $post_id->get_error_messages() );
+				if( $post_id instanceof WP_Error ){
+					wp_send_json_error($post_id->get_error_messages());
 				}
 
 				wp_send_json_success(array(
 					'message' 	=> $post['post_title'].'<br>'.__('Successfully Saved', 'frontend-dashboard-custom-post'),
 					'id'	=> $post_id,
-				));			
+				));
 			}
 			$error = new WP_Error('fed_action_not_allowed', __('Sorry! your are not allowed to do this action', 'frontend-dashboard-custom-post'));
 
@@ -1260,44 +1263,68 @@ if ( ! class_exists('Fed_Cp_Menu')) {
 			$post  = fed_process_dashboard_display_post($post_type);
 			$item        = isset( $get_payload, $get_payload['menu_type'], $get_payload['menu_id'] ) ? $get_payload['menu_type'] . '_' . $get_payload['menu_id'] : '';
 			$menus = fed_search_index_from_array_recursively($menu['query']['menu_items'], $item);
+			$current_page      = isset( $_REQUEST['page_number'] ) ? absint( $_REQUEST['page_number'] ) : 1;
+			$pagination_counts = ceil( $post->found_posts / get_option( 'posts_per_page', 10 ) );
 
 			do_action('fed_display_dashboard_view_post_list_before');
-
 			?>
 			<?php if( fed_cp_is_user_can_add_post($post_type) ){ ?>
 			<div class="fed_dashboard_post_menu_container">
 				<div class="fed_dashboard_post_menu_add_post">
-					<a class="btn btn-primary" href="<?php echo esc_url(add_query_arg(array(
-						'post_status'   => 'add',
-						'fed_post_type' => $post_type,
-					)), site_url()); ?>">
+					<a class="btn btn-primary" href="
+						<?php
+						echo esc_url( add_query_arg( array(
+							'post_status'   => 'add',
+							'fed_post_type' => $post_type,
+						) ), site_url() );
+						?>
+						">
 							<i class="fa fa-plus"></i>
 							<?php esc_attr_e( 'Add New', 'frontend-dashboard' ); ?>
 							<?php echo esc_attr( $menus['menu'] ); ?>
-						</a>
-					</div>
+					</a>
+				</div>
 			</div>
-		<?php } ?>
+			<?php } ?>
 			<div class="fed_dashboard_item_field_container m-y-20">
 				<?php foreach ($post->get_posts() as $single_post) { ?>
 					<div class="fed_dashboard_item_field_wrapper">
 						<div class="row fed_dashboard_item_field <?php echo esc_attr( $single_post->post_status ); ?>">
-						<div class="col-md-1 col-xs-12 col-sm-12"><?php echo (int) $single_post->ID; ?></div>
-							<div class="col-md-4 col-xs-12 col-sm-12">
-								<?php echo esc_attr( $single_post->post_title ); ?>
-								<span class="badge fed_post_status_on_hover  <?php echo esc_attr( $single_post->post_status ); ?>">
-									<?php echo esc_attr( fed_get_display_post_status( $single_post->post_status ) ); ?>
-								</span>
+							<?php
+							$details = array(
+								'ID'          => array(
+									'value' => (int) $single_post->ID,
+									'class' => 'col-md-1 col-xs-12 col-sm-12',
+								),
+								'post_title'  => array(
+									'value' => $single_post->post_title .
+									           '<span class="badge fed_post_status_on_hover ' . esc_attr( $single_post->post_status ) . '">' .
+									           esc_attr( fed_get_display_post_status( $single_post->post_status ) ) .
+									           '</span>',
+									'class' => 'col-md-4 col-xs-12 col-sm-12',
+								),
+								'post_author' => array(
+									'value' => esc_attr( get_the_author_meta( 'display_name',
+										$single_post->post_author ) ),
+									'class' => 'col-md-2 col-xs-12 col-sm-12',
+								),
+								'post_date'   => array(
+									'value' => esc_attr( date( get_option( 'date_format' ),
+										strtotime( $single_post->post_date ) ) ),
+									'class' => 'col-md-3 col-xs-12 col-sm-12',
+								),
+							);
+
+							$details = apply_filters( 'fed_cp_list_details', $details, $single_post, $post_type );
+
+							foreach ( $details as $detail ) {
+								?>
+								<div class="<?php echo esc_attr( $detail['class'] ); ?>">
+									<?php echo wp_kses_post( $detail['value'] ); ?>
 							</div>
-							<div class="col-md-2 col-xs-12 col-sm-12">
-								<?php echo esc_attr( get_the_author_meta( 'display_name',
-									$single_post->post_author ) ); ?>
-							</div>
-							<div class="col-md-3 col-xs-12 col-sm-12">
-								<?php echo esc_attr( date( get_option( 'date_format' ),
-									strtotime( $single_post->post_date )
-								) ); ?>
-							</div>
+								<?php
+							}
+							?>
 							<div class="col-md-2 col-xs-12">
 								<div class="row">
 									<?php if (fed_cp_is_user_can_view_post($post_type)) { ?>
@@ -1347,7 +1374,7 @@ if ( ! class_exists('Fed_Cp_Menu')) {
 					</div>
 					<?php
 				}
-				fed_get_post_pagination($post, $menu);
+				fed_get_pagination( $current_page, $pagination_counts );
 				?>
 			</div>
 			<?php
@@ -1568,7 +1595,6 @@ if ( ! class_exists('Fed_Cp_Menu')) {
 						</div>
 						<?php
 					}
-
 					$this->fed_show_category_tag_post_format($post, $post_settings);
 
 					/**

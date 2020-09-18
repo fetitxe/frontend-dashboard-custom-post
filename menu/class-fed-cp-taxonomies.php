@@ -93,8 +93,8 @@ if( !class_exists('Fed_Cp_Taxonomies') ){
 			/**
 			 * Check for mandatory fields
 			 */
-			if( !is_array($request['object_type']) 
-				|| !isset($request['slug'], $request['label'], $request['singular_name'], $request['object_type']) 
+			if( !isset($request['slug'], $request['label'], $request['singular_name'], $request['object_type']) 
+				|| !is_array($request['object_type']) 
 				|| fed_request_empty($request['slug']) 
 				|| fed_request_empty($request['label']) 
 				|| fed_request_empty($request['singular_name'])
@@ -146,7 +146,7 @@ if( !class_exists('Fed_Cp_Taxonomies') ){
 					$name              = fed_request_empty($menu['name']) ? $menu['singular_name'] : $menu['name'];
 					$menu_name         = fed_request_empty($menu['menu_name']) ? $menu['label'] : $menu['menu_name'];
 					$parent_item_colon = fed_request_empty($menu['parent_item_colon']) ? 'Parent Page:'.' Attributes' : $menu['parent_item_colon'];
-					$all_items = fed_request_empty($menu['all_items']) ? __('All Posts', 'frontend-dashboard-custom-post') : $menu['all_items'];
+					$all_items         = fed_request_empty($menu['all_items']) ? __('All Posts', 'frontend-dashboard-custom-post') : $menu['all_items'];
 					$add_new_item      = fed_request_empty($menu['add_new_item']) ? 'Add New '.$name : $menu['add_new_item'];
 					$edit_item         = fed_request_empty($menu['edit_item']) ? 'Edit '.$name : $menu['edit_item'];
 					$view_item         = fed_request_empty($menu['view_item']) ? 'View '.$name : $menu['view_item'];
